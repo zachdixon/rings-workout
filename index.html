@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Rings Longevity Workout Companion</title>
+ <style>
+ :root {
+ --bg: #0f172a;
+ --card-bg: #1e293b;
+ --accent: #38bdf8;
+ --accent-glow: rgba(56, 189, 248, 0.3);
+ --text: #f8fafc;
+ --text-muted: #94a3b8;
+ --success: #34d399;
+ --border: #334155;
+ }
+
+ * {
+ box-sizing: border-box;
+ margin: 0;
+ padding: 0;
+ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+ }
+
+ body {
+ background-color: var(--bg);
+ color: var(--text);
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ min-height: 100vh;
+ padding: 16px;
+ }
+
+ .container {
+ width: 100%;
+ max-width: 600px;
+ display: flex;
+ flex-direction: column;
+ gap: 16px;
+ }
+
+ header {
+ text-align: center;
+ padding: 8px 0;
+ }
+
+ h1 {
+ font-size: 1.25rem;
+ font-weight: 700;
+ color: var(--text);
+ }
+
+ .progress-wrapper {
+ margin-top: 12px;
+ display: flex;
+ flex-direction: column;
+ gap: 6px;
+ }
+
+ .progress-bar-bg {
+ background: var(--border);
+ height: 8px;
+ border-radius: 999px;
+ overflow: hidden;
+ }
+
+ .progress-bar-fill {
+ background: var(--accent);
+ height: 100%;
+ width: 0%;
+ transition: width 0.3s ease;
+ }
+
+ .step-counter {
+ font-size: 0.85rem;
+ color: var(--text-muted);
+ display: flex;
+ justify-content: space-between;
+ }
+
+ .card {
+ background: var(--card-bg);
+ border: 1px solid var(--border);
+ border-radius: 16px;
+ padding: 20px;
+ box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+ display: flex;
+ flex-direction: column;
+ gap: 16px;
+ }
+
+ .badge {
+ align-self: flex-start;
+ background: rgba(56, 189, 248, 0.15);
+ color: var(--accent);
+ font-size: 0.75rem;
+ font-weight: 700;
+ padding: 4px 10px;
+ border-radius: 999px;
+ letter-spacing: 0.5px;
+ text-transform: uppercase;
+ }
+
+ .exercise-title {
+ font-size: 1.4rem;
+ font-weight: 700;
+ line-height: 1.2;
+ }
+
+ .meta-row {
+ display: flex;
+ gap: 12px;
+ flex-wrap: wrap;
+ }
+
+ .meta-tag {
+ background: var(--bg);
+ border: 1px solid var(--border);
+ padding: 6px 12px;
+ border-radius: 8px;
+ font-size: 0.9rem;
+ color: var(--text);
+ }
+
+ .meta-tag span {
+ color: var(--accent);
+ font-weight: 600;
+ }
+
+ .instructions {
+ color: var(--text-muted);
+ line-height: 1.5;
+ font-size: 0.95rem;
+ }
+
+ .instructions strong {
+ color: var(--text);
+ }
+
+ .media-card {
+ display: flex;
+ flex-direction: column;
+ gap: 8px;
+ }
+
+ .video-container {
+ position: relative;
+ width: 100%;
+ border-radius: 12px;
+ overflow: hidden;
+ background: #000;
+ padding-top: 56.25%;
+ }
+
+ .video-container iframe {
+ position: absolute;
+ top: 0;
+ left: 0;
+ width: 100%;
+ height: 100%;
+ border: 0;
+ }
+
+ .video-fallback-btn {
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ gap: 8px;
+ padding: 10px 14px;
+ border-radius: 8px;
+ background: #dc2626;
+ color: #fff;
+ text-decoration: none;
+ font-size: 0.85rem;
+ font-weight: 600;
+ transition: background 0.2s ease;
+ }
+
+ .video-fallback-btn:hover {
+ background: #b91c1c;
+ }
+
+ .timer-section {
+ background: rgba(15, 23, 42, 0.6);
+ border: 1px solid var(--border);
+ border-radius: 12px;
+ padding: 12px 16px;
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ }
+
+ .timer-display {
+ font-size: 1.3rem;
+ font-weight: 700;
+ font-variant-numeric: tabular-nums;
+ color: var(--accent);
+ }
+
+ .timer-buttons {
+ display: flex;
+ gap: 8px;
+ }
+
+ .btn-timer {
+ background: var(--card-bg);
+ border: 1px solid var(--border);
+ color: var(--text);
+ font-size: 0.8rem;
+ padding: 6px 12px;
+ border-radius: 6px;
+ cursor: pointer;
+ font-weight: 600;
+ }
+
+ .btn-timer:hover {
+ background: var(--border);
+ }
+
+ .nav-buttons {
+ display: flex;
+ gap: 12px;
+ }
+
+ .btn {
+ flex: 1;
+ padding: 14px;
+ border-radius: 12px;
+ font-size: 1rem;
+ font-weight: 700;
+ cursor: pointer;
+ border: none;
+ transition: all 0.2s ease;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ }
+
+ .btn-prev {
+ background: var(--card-bg);
+ color: var(--text-muted);
+ border: 1px solid var(--border);
+ }
+
+ .btn-prev:hover:not(:disabled) {
+ background: var(--border);
+ color: var(--text);
+ }
+
+ .btn-next {
+ background: var(--accent);
+ color: #0f172a;
+ }
+
+ .btn-next:hover {
+ box-shadow: 0 0 15px var(--accent-glow);
+ }
+
+ .btn:disabled {
+ opacity: 0.4;
+ cursor: not-allowed;
+ }
+ </style>
+</head>
+<body>
+ <div class="container">
+ <header>
+ <h1>Gymnastic Rings Workout Companion</h1>
+ <div class="progress-wrapper">
+ <div class="progress-bar-bg">
+ <div class="progress-bar-fill" id="progressFill"></div>
+ </div>
+ <div class="step-counter">
+ <span id="stepLabel">Phase 1: Warmup</span>
+ <span id="stepCount">1 of 12</span>
+ </div>
+ </div>
+ </header>
+
+ <main class="card">
+ <span class="badge" id="phaseBadge">Warmup</span>
+ <h2 class="exercise-title" id="exerciseTitle">Exercise Name</h2>
+
+ <div class="meta-row">
+ <div class="meta-tag" id="tagVolume">Target: <span>3 sets × 6–8 reps</span></div>
+ <div class="meta-tag" id="tagRest">Suggested Rest: <span>90s</span></div>
+ </div>
+
+ <div class="media-card">
+ <div class="video-container">
+ <iframe 
+ id="videoFrame" 
+ src="" 
+ title="Exercise Demonstration" 
+ referrerpolicy="strict-origin-when-cross-origin"
+ allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+ allowfullscreen>
+ </iframe>
+ </div>
+ <a id="directVideoLink" class="video-fallback-btn" href="#" target="_blank" rel="noopener">
+ <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+ <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+ </svg>
+ Open Demonstration in YouTube App
+ </a>
+ </div>
+
+ <div class="instructions" id="instructionsText">
+ Exercise cues and joint safety reminders will appear here.
+ </div>
+
+ <div class="timer-section">
+ <div>
+ <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Rest Timer</div>
+ <div class="timer-display" id="timerDisplay">01:30</div>
+ </div>
+ <div class="timer-buttons">
+ <button class="btn-timer" id="startTimerBtn" onclick="toggleTimer()">Start</button>
+ <button class="btn-timer" onclick="resetTimer()">Reset</button>
+ </div>
+ </div>
+ </main>
+
+ <footer class="nav-buttons">
+ <button class="btn btn-prev" id="prevBtn" onclick="prevStep()">Previous</button>
+ <button class="btn btn-next" id="nextBtn" onclick="nextStep()">Next Exercise</button>
+ </footer>
+ </div>
+
+ <script>
+ const workoutData = [
+ {
+ phase: "Warm-Up (Phase 1)",
+ title: "Quadruped Palm & Wrist Mobility",
+ volume: "10 pulses forward + 10 reverse rockers",
+ rest: 30,
+ videoId: "5OWbZ9Oxz0E",
+ instructions: "Rock gently forward past wrist crease. Place backs of hands on floor with fingers toward knees to stretch extensors. <strong>Zero equipment needed. Protects carpal tunnel and flexor tendons.</strong>"
+ },
+ {
+ phase: "Warm-Up (Phase 2)",
+ title: "Prone Y-T-W Shoulder Raises",
+ volume: "8–10 reps each letter (Y, T, W)",
+ rest: 30,
+ videoId: "QdGTI4Lshg4",
+ instructions: "Lie flat on stomach. Form a <strong>Y</strong> (thumbs up, lift arms), a <strong>T</strong> (arms out wide, squeeze blades), and a <strong>W</strong> (elbows bent to ribs, externally rotate). <strong>Zero equipment needed; primes lower traps and rotator cuff.</strong>"
+ },
+ {
+ phase: "Warm-Up (Phase 3)",
+ title: "Scapular Pulls on Rings",
+ volume: "2 sets × 6–8 reps",
+ rest: 45,
+ videoId: "-ZIpSoTRsuE",
+ instructions: "From dead hang, depress scapulae downward without bending elbows. Pull shoulder blades down and back, pause 2 seconds, and lower under control."
+ },
+ {
+ phase: "Superset A1",
+ title: "Ring Neutral-Grip Pull-ups (or Rows)",
+ volume: "3 sets × 6–8 reps (Tempo 3-1-1-0)",
+ rest: 90,
+ videoId: "Qsg6EP4Va4I",
+ instructions: "Start neutral or slightly pronated. Rotate naturally to supinated at the top. Keep elbows tucked ~45°. <strong>Stop 1–2 reps short of failure.</strong>"
+ },
+ {
+ phase: "Superset A2",
+ title: "Ring Push-ups (Parallel to 30° Out)",
+ volume: "3 sets × 8–12 reps",
+ rest: 90,
+ videoId: "7FRwuB1_l7U",
+ instructions: "Lower chest below ring level for deep pec stretch. Press back up and bring rings together to touch without forcing outward RTO lockouts."
+ },
+ {
+ phase: "Superset B1",
+ title: "Ring-Assisted Bulgarian Split Squats",
+ volume: "3 sets × 8–10 reps / leg",
+ rest: 60,
+ videoId: "hiLF_pF3EJM",
+ instructions: "Rear foot on bench or box. Hold ring straps lightly for balance and stability so you can sit deeply into front knee and hip."
+ },
+ {
+ phase: "Superset B2",
+ title: "Double-Leg Ring Hamstring Curls",
+ volume: "3 sets × 10–12 reps",
+ rest: 60,
+ videoId: "d8F3_MkhcsU",
+ instructions: "Heels in low straps. Elevate hips into full bridge and curl heels to glutes while keeping hips from sagging toward the ground."
+ },
+ {
+ phase: "Superset C1",
+ title: "Chest-Supported Ring Face Pulls",
+ volume: "3 sets × 12–15 reps",
+ rest: 60,
+ videoId: "lm4Nt-N6qUk",
+ instructions: "Lean back at 45°. Pull rings to ears while rotating thumbs backward. Squeeze shoulder blades together to build upper back and rear delts."
+ },
+ {
+ phase: "Superset C2",
+ title: "Ring Triceps Overhead Extensions",
+ volume: "3 sets × 10–12 reps",
+ rest: 60,
+ videoId: "1BriNYJU0nE",
+ instructions: "Facing away from anchor, pin elbows high and pointing forward. Bend at elbows to lower head past rings, then extend smoothly."
+ },
+ {
+ phase: "Finisher D",
+ title: "Hollow Body Plank on Floor or Rings",
+ volume: "3 sets × 25–35 sec hold",
+ rest: 60,
+ videoId: "zzin9aFMGjM",
+ instructions: "Maintain a hollow body shape: tuck tailbone under and press shoulder blades apart (protraction). Avoid sagging the lower back."
+ },
+ {
+ phase: "Cool-Down",
+ title: "Feet-Supported Passive Hang & Arm Stretches",
+ volume: "2 × 30–45 sec hang + 30s/side bicep stretch",
+ rest: 30,
+ videoId: "2_HjK2tG2j4",
+ instructions: "Decompress spine and lats with supported hang. Follow with low-ring pronated stretch behind you to open up biceps and anterior shoulder."
+ },
+ {
+ phase: "Cool-Down & Reset",
+ title: "Kneeling Wrist Peel & Restorative Breathing",
+ volume: "20 sec flexor peel + 2 min box breathing",
+ rest: 0,
+ videoId: "5OWbZ9Oxz0E",
+ instructions: "Palms on mat, fingers back toward knees to stretch flexors. Finish lying down with 4-second box breathing to promote recovery."
+ }
+ ];
+
+ let currentIndex = 0;
+ let timerInterval = null;
+ let secondsLeft = 90;
+ let isTimerRunning = false;
+
+ function renderStep() {
+ const step = workoutData[currentIndex];
+
+ document.getElementById("phaseBadge").textContent = step.phase;
+ document.getElementById("exerciseTitle").textContent = step.title;
+ document.getElementById("tagVolume").innerHTML = `Target: <span>${step.volume}</span>`;
+ document.getElementById("tagRest").innerHTML = `Suggested Rest: <span>${step.rest}s</span>`;
+ document.getElementById("instructionsText").innerHTML = step.instructions;
+
+ document.getElementById("videoFrame").src = `https://www.youtube.com/embed/${step.videoId}`;
+ document.getElementById("directVideoLink").href = `https://www.youtube.com/watch?v=${step.videoId}`;
+
+ const progressPercent = ((currentIndex + 1) / workoutData.length) * 100;
+ document.getElementById("progressFill").style.width = `${progressPercent}%`;
+ document.getElementById("stepLabel").textContent = step.phase;
+ document.getElementById("stepCount").textContent = `${currentIndex + 1} of ${workoutData.length}`;
+
+ document.getElementById("prevBtn").disabled = currentIndex === 0;
+ document.getElementById("nextBtn").textContent = (currentIndex === workoutData.length - 1) ? "Finish Workout" : "Next Exercise";
+
+ secondsLeft = step.rest;
+ updateTimerDisplay();
+ clearInterval(timerInterval);
+ isTimerRunning = false;
+ document.getElementById("startTimerBtn").textContent = "Start";
+ }
+
+ function prevStep() {
+ if (currentIndex > 0) {
+ currentIndex--;
+ renderStep();
+ }
+ }
+
+ function nextStep() {
+ if (currentIndex < workoutData.length - 1) {
+ currentIndex++;
+ renderStep();
+ } else {
+ alert("Workout complete! Outstanding job keeping joint longevity at the center.");
+ }
+ }
+
+ function updateTimerDisplay() {
+ const mins = Math.floor(secondsLeft / 60);
+ const secs = secondsLeft % 60;
+ document.getElementById("timerDisplay").textContent = 
+ `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+ }
+
+ function toggleTimer() {
+ if (isTimerRunning) {
+ clearInterval(timerInterval);
+ document.getElementById("startTimerBtn").textContent = "Resume";
+ } else {
+ timerInterval = setInterval(() => {
+ if (secondsLeft > 0) {
+ secondsLeft--;
+ updateTimerDisplay();
+ } else {
+ clearInterval(timerInterval);
+ isTimerRunning = false;
+ document.getElementById("startTimerBtn").textContent = "Start";
+ if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+ }
+ }, 1000);
+ document.getElementById("startTimerBtn").textContent = "Pause";
+ }
+ isTimerRunning = !isTimerRunning;
+ }
+
+ function resetTimer() {
+ clearInterval(timerInterval);
+ isTimerRunning = false;
+ document.getElementById("startTimerBtn").textContent = "Start";
+ secondsLeft = workoutData[currentIndex].rest;
+ updateTimerDisplay();
+ }
+
+ renderStep();
+ </script>
+</body>
+</html>
